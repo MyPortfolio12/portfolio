@@ -3,7 +3,7 @@ import React from 'react';
 const Hero = () => {
   const downloadResume = () => {
     const link = document.createElement('a');
-    link.href = '/resume.pdf';
+    link.href = '/Vinod_Resume_JAVA%20-%20Prod_Support.pdf'; // <- URL encoded
     link.download = 'Vinod_Kumar_Aluru_Resume.pdf';
     document.body.appendChild(link);
     link.click();
