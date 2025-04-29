@@ -53,7 +53,7 @@ const Hero = () => {
             <div className="w-64 h-64 md:w-96 md:h-96 rounded-full bg-blue-600 bg-opacity-10 flex items-center justify-center">
               <div className="w-60 h-60 md:w-88 md:h-88 rounded-full overflow-hidden border-4 border-white shadow-lg">
                 <img
-                  src="/sanki.p.jpg"
+                  src="/shot.jpg.jpg"
                   alt="Vinod Kumar Aluru"
                   className="w-full h-full object-cover"
                 />
