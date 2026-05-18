@@ -77,3 +77,4 @@ Search for `Open to opportunities` and update with your current status.
 2. **Featured section** → Add Media → Upload `resume.pdf`
 3. **Contact Info** → Add Website → paste your Vercel URL
 4. **About section** → mention your Vercel portfolio link
+ 
