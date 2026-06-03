@@ -1,168 +1,170 @@
 'use client'
 import { useEffect, useState } from 'react'
-
+ 
 // ─── DATA — pulled directly from resume ──────────────────────────────────────
-
+ 
 const NAV_LINKS = ['about', 'skills', 'experience', 'contact']
-
+ 
 const SKILLS = [
   {
     category: 'Generative AI & LLM Engineering',
     color: 'blue',
-    items: ['GPT-4', 'GPT-4o', 'Azure OpenAI', 'AWS Bedrock', 'LangChain', 'LangGraph',
-      'LlamaIndex', 'RAG Pipelines', 'Prompt Engineering', 'Semantic Search',
-      'Hugging Face Transformers', 'Pinecone', 'FAISS', 'Vector Databases', 'RAGAS'],
+    items: ['GPT-4o', 'GPT-4o-mini', 'Azure OpenAI', 'LangChain', 'LangGraph',
+      'LlamaIndex', 'RAG', 'RAGAS', 'Prompt Engineering', 'Chain-of-Thought Prompting',
+      'Semantic Search', 'Embeddings', 'Hugging Face sentence-transformers',
+      'Pinecone', 'Vertex AI Vector Search', 'Azure AI Search', 'OCR', 'Vector Databases'],
   },
   {
     category: 'Machine Learning & Data Science',
     color: 'green',
-    items: ['Scikit-Learn', 'TensorFlow', 'PyTorch', 'XGBoost', 'LightGBM',
-      'Random Forest', 'Logistic Regression', 'SMOTE', 'Prophet', 'K-Means',
-      'Feature Engineering', 'A/B Testing', 'Statistical Analysis', 'SHAP', 'ONNX'],
+    items: ['Scikit-learn', 'XGBoost', 'LightGBM', 'SMOTE', 'SHAP',
+      'RFM Analysis', 'CLV Modeling', 'Propensity Scoring', 'Churn Prediction',
+      'Basket Analysis', 'Cross-Validation', 'Hyperparameter Optimization',
+      'A/B Testing', 'Hypothesis Testing', 'ML Pipelines', 'Model Governance',
+      'Experiment Lineage', 'Model Cards'],
   },
   {
     category: 'Backend & API Development',
     color: 'blue',
-    items: ['Python', 'FastAPI', 'Flask', 'Django', 'gRPC', 'REST APIs',
-      'Microservices Architecture', 'Event-Driven Architecture',
-      'OOP', 'Pydantic', 'Swagger / OpenAPI', 'ETL Pipelines'],
+    items: ['Python', 'FastAPI', 'Flask', 'Django', 'REST APIs',
+      'Microservices Architecture', 'Django ORM', 'API Integration',
+      'Workflow Automation', 'Swagger / OpenAPI', 'OOP'],
   },
   {
     category: 'Cloud Platforms (Azure · AWS · GCP)',
     color: 'green',
-    items: ['Azure OpenAI', 'AKS', 'Azure Databricks', 'Azure AI Search', 'Azure Monitor',
-      'AWS SageMaker', 'EKS', 'Lambda', 'AWS Glue', 'EMR', 'S3',
-      'GCP BigQuery', 'GKE', 'Vertex AI', 'Dataproc', 'Pub/Sub'],
+    items: ['Azure OpenAI', 'Azure AI Search', 'Azure Databricks', 'Azure Blob Storage',
+      'Azure SQL Database', 'Cosmos DB', 'AKS', 'Azure Container Registry',
+      'Amazon SageMaker', 'SageMaker Feature Store', 'SageMaker Model Monitor',
+      'AWS Glue', 'Amazon Redshift', 'Amazon EKS', 'Amazon S3', 'AWS IAM',
+      'AWS CodePipeline', 'AWS CodeBuild', 'Vertex AI', 'Vertex AI Vector Search',
+      'BigQuery', 'GKE', 'Google Cloud Build'],
   },
   {
     category: 'Data Engineering & Distributed Systems',
     color: 'blue',
-    items: ['Apache Kafka', 'Apache Spark', 'Spark Streaming', 'PySpark',
-      'Databricks', 'Dataproc', 'BigQuery', 'Snowflake',
-      'Cloud Data Pipelines', 'Stream Processing'],
+    items: ['Apache Spark', 'PySpark', 'Azure Databricks', 'AWS Glue',
+      'Great Expectations', 'HL7/FHIR REST APIs', 'SageMaker Feature Store',
+      'Cloud Data Pipelines', 'Distributed Data Processing'],
   },
   {
     category: 'MLOps, DevOps & Databases',
     color: 'green',
-    items: ['Docker', 'Kubernetes', 'Terraform', 'Jenkins', 'GitHub Actions',
-      'Azure DevOps', 'MLflow', 'Airflow', 'CI/CD',
-      'PostgreSQL', 'SQL Server', 'DynamoDB', 'Cosmos DB', 'Amazon Redshift',
-      'Prometheus', 'Grafana', 'Datadog',
-      'HIPAA', 'PCI-DSS', 'FedRAMP High'],
+    items: ['Docker', 'Kubernetes', 'AKS', 'Amazon EKS', 'GKE', 'Terraform',
+      'Jenkins', 'GitHub Actions', 'Azure DevOps', 'AWS CodePipeline', 'Google Cloud Build',
+      'MLflow', 'CI/CD', 'SQL Server', 'MySQL', 'Cosmos DB', 'BigQuery',
+      'Azure SQL Database', 'Amazon Redshift', 'Amazon S3',
+      'Azure Monitor', 'CloudWatch', 'Grafana', 'Hallucination Rate Monitoring',
+      'HIPAA', 'PCI-DSS', 'PHI Masking', 'PII Redaction', 'AML', 'KYC', 'SOX'],
   },
 ]
-
+ 
 const EXPERIENCE = [
   {
-    title: 'Gen AI Engineer',
+    title: 'Generative AI Engineer',
     company: 'Quest Diagnostics',
-    period: 'Nov 2024 – Present',
+    period: 'Mar 2025 – Present',
     location: 'New York, NY',
     cloud: 'Azure + GCP',
     compliance: 'HIPAA',
     color: '#00C2FF',
     summary: 'Building a production Clinical Document Intelligence platform on Azure and GCP, enabling autonomous healthcare document processing and RAG-powered clinical AI.',
     highlights: [
-      'Architected a production-grade Clinical Document Intelligence platform using Azure OpenAI GPT-4o, LangChain, FastAPI, and Azure AI Search — improving healthcare document review efficiency across enterprise clinical operations.',
-      'Designed scalable Microservices-based RAG architecture on AKS enabling secure document ingestion, embedding retrieval, orchestration, and real-time healthcare AI response delivery.',
-      'Engineered end-to-end RAG pipelines using LangChain and LangGraph implementing semantic chunking, embedding retrieval, ranking, and prompt orchestration improving healthcare knowledge retrieval.',
-      'Established enterprise GenAI evaluation workflows using RAGAS, prompt A/B testing, and hallucination monitoring — improving retrieval precision and healthcare reliability across diagnostic AI support.',
-      'Built scalable LLM orchestration workflows using LangChain, LangGraph, LlamaIndex, FastAPI, and Hugging Face sentence-transformers supporting OCR extraction and intelligent document-processing.',
-      'Orchestrated scalable GenAI workloads on AKS and GKE configuring autoscaling, Kubernetes Secrets, and deployment strategies supporting enterprise healthcare AI operations.',
-      'Provisioned enterprise cloud infrastructure through Terraform, Azure OpenAI, Pinecone, and Vertex AI maintaining governance compliance across development and production ecosystems.',
-      'Monitored GenAI platform health using Azure Monitor, Application Insights, and Vertex AI Monitoring tracking latency, hallucination rates, and healthcare retrieval quality metrics.',
+      'Clinical Document Intelligence platform work brought together Azure OpenAI, GPT-4o, LangChain, FastAPI, and Azure AI Search to improve healthcare document review across clinical operations and diagnostic support teams.',
+      'Microservices-based RAG delivery on Azure Kubernetes Service supported secure document ingestion, embedding retrieval, orchestration, and real-time healthcare AI responses for clinical support environments.',
+      'Secure healthcare ingestion used Azure Blob Storage, SQL Server, HL7/FHIR REST APIs, and Cosmos DB, with PHI masking and PII redaction before downstream LLM processing.',
+      'End-to-end RAG work used LangChain and LangGraph for semantic chunking, embedding retrieval, ranking, and prompt orchestration to improve diagnostic knowledge retrieval.',
+      'Performance tuning used Prompt Engineering, Chain-of-Thought prompting, and Azure AI Search query refinement to reduce healthcare response latency and strengthen diagnostic context handling.',
+      'LLM orchestration used LangChain, LangGraph, LlamaIndex, FastAPI, and Hugging Face sentence-transformers to support OCR extraction and intelligent healthcare document processing.',
+      'Semantic retrieval used Pinecone and Vertex AI Vector Search to manage healthcare embeddings across diagnostic guidelines, treatment references, and clinical repositories.',
+      'Platform monitoring used Azure Monitor, Application Insights, and Vertex AI Monitoring to track latency, hallucination rates, retrieval quality, and service stability.',
+      'Cloud provisioning used Terraform with Azure OpenAI, Pinecone, and Vertex AI to maintain governance alignment across development and production healthcare AI environments.',
+      'Release workflows used Azure DevOps, Google Cloud Build, and GitHub Actions for Docker image builds, integration testing, and zero-downtime GenAI releases.',
     ],
     stack: ['Python', 'Azure OpenAI', 'GPT-4o', 'LangChain', 'LangGraph', 'LlamaIndex',
       'FastAPI', 'Azure AI Search', 'Pinecone', 'Vertex AI', 'AKS', 'GKE',
-      'Docker', 'Terraform', 'PySpark', 'Azure Databricks', 'RAGAS', 'HIPAA'],
+      'Docker', 'Terraform', 'PySpark', 'Azure Databricks', 'Cosmos DB', 'BigQuery',
+      'HL7/FHIR APIs', 'RAGAS', 'PyTest', 'HIPAA'],
   },
   {
-    title: 'AI / ML Engineer',
-    company: 'Fiserv, Inc.',
-    period: 'Aug 2022 – Oct 2024',
-    location: 'Frisco, TX',
+    title: 'Machine Learning Engineer',
+    company: 'UBS',
+    period: 'Sep 2020 – Nov 2022',
+    location: 'India',
     cloud: 'AWS',
-    compliance: 'PCI-DSS',
+    compliance: 'PCI-DSS · SOX',
     color: '#00FFAA',
-    summary: 'Delivered a real-time fraud detection AI platform on AWS EKS processing enterprise banking transactions, improving risk identification by 38%.',
+    summary: 'Engineered a wealth risk scoring platform on AWS SageMaker for fraud triage and regulated portfolio analytics within wealth management governance.',
     highlights: [
-      'Delivered a production Real-Time Fraud Detection AI platform using Python, AWS SageMaker, XGBoost, LightGBM, and Apache Kafka — improving transaction risk identification by 38%.',
-      'Designed scalable Event-Driven Microservices architecture on Amazon EKS and AWS Lambda enabling secure fraud scoring, alert generation, and transaction monitoring across enterprise banking channels.',
-      'Engineered end-to-end RAG pipelines implementing semantic retrieval, contextual ranking, Prompt Engineering, and streaming techniques improving financial knowledge retrieval and conversational AI quality.',
-      'Established enterprise Champion/Challenger evaluation frameworks using A/B testing, RAGAS, and SageMaker Model Monitor improving fraud detection reliability across banking intelligence.',
-      'Automated end-to-end CI/CD pipelines using AWS CodePipeline, GitHub Actions, and Jenkins streamlining model deployments and integration testing throughout enterprise banking operations.',
-      'Provisioned enterprise cloud infrastructure using Terraform and AWS CloudFormation managing SageMaker, EKS, ECR, Redshift, Pinecone, and DynamoDB resources across financial environments.',
-      'Monitored fraud AI platform health using Amazon CloudWatch, SageMaker Model Monitor, and Grafana tracking model drift, inference latency, and fraud prediction stability.',
+      'Engineered wealth risk scoring platform with Amazon SageMaker, XGBoost, and Amazon S3, improving advisor intelligence, fraud triage, and regulated portfolio analytics for wealth management.',
+      'Designed event-driven ML architecture across AWS Glue, Amazon Redshift, and Amazon SageMaker, processing transaction feeds, portfolio holdings, and market signals for model training at scale.',
+      'Integrated transaction feeds, MCC codes, and watchlist data through AWS Glue and Amazon S3, applying AML controls for governed feature preparation and audit traceability.',
+      'Adopted SageMaker Feature Store to manage reusable AML, KYC, transaction velocity, and advisor interaction features across training and inference workflows with lineage controls.',
+      'Benchmarked XGBoost, LightGBM, and scikit-learn models against banking risk patterns, selecting gradient boosting for explainability, tabular performance, and auditability.',
+      'Addressed class imbalance using SMOTE, stratified cross-validation, and threshold calibration, improving suspicious activity detection across analyst queues.',
+      'Standardized MLflow tracking with scikit-learn Pipeline patterns, capturing parameters, artifacts, and model lineage for repeatable experimentation under governance audit.',
+      'Evaluated champion-challenger models using SHAP, SageMaker Model Monitor, and drift diagnostics, validating AUC stability and PSI movement before governance board decisions.',
+      'Deployed scoring workloads on Amazon EKS with autoscaling, and automated release pipelines using AWS CodePipeline, AWS CodeBuild, and PyTest with rolling deployment strategy.',
+      'Authored model cards, SHAP baselines, experiment lineage, and feature engineering specs supporting SOX audit readiness and transparent model governance documentation.',
     ],
-    stack: ['Python', 'SageMaker', 'XGBoost', 'LightGBM', 'Kafka', 'LangChain',
-      'AWS Bedrock', 'FastAPI', 'EKS', 'Lambda', 'Docker', 'Terraform',
-      'Pinecone', 'FAISS', 'RAGAS', 'CloudWatch', 'Grafana', 'PCI-DSS'],
+    stack: ['Python', 'PySpark', 'Pandas', 'Amazon SageMaker', 'SageMaker Feature Store',
+      'SageMaker Model Monitor', 'XGBoost', 'LightGBM', 'scikit-learn', 'SMOTE', 'MLflow',
+      'SHAP', 'Great Expectations', 'AWS Glue', 'Amazon S3', 'Amazon Redshift',
+      'Amazon EKS', 'Docker', 'Terraform', 'CloudWatch', 'Grafana', 'PCI-DSS', 'SOX', 'AML', 'KYC'],
   },
   {
-    title: 'Sr Data Science Engineer',
-    company: 'State of Kentucky',
-    period: 'Feb 2020 – Jun 2022',
-    location: 'Remote',
-    cloud: 'GCP',
-    compliance: 'FedRAMP High',
-    color: '#00C2FF',
-    summary: 'Spearheaded Citizen Claims Intelligence Platform on GCP for statewide unemployment fraud detection, establishing the AI Agent Delivery Framework across 75+ model versions.',
-    highlights: [
-      'Spearheaded a Citizen Claims Intelligence Platform using Python, FastAPI, XGBoost, and BigQuery improving fraudulent unemployment investigation accuracy during COVID assistance expansion.',
-      'Engineered an Event-Driven Fraud Analytics Architecture on GKE, Pub/Sub, and Cloud Storage for real-time unemployment adjudication during statewide COVID assistance modernization.',
-      'Established ML feature repositories using MLflow and BigQuery behavioral datasets managing fraud indicators — claimant velocity, benefit duplication, and temporal filing intelligence.',
-      'Authored OpenAPI specifications, SHAP baselines, and MLflow lineage documentation covering 75+ production model versions — reducing analyst onboarding timelines by 43% across Kentucky departments.',
-      'Instrumented observability dashboards using Cloud Monitoring, Prometheus, and Grafana tracking AUC-ROC drift, PSI thresholds, and latency degradation.',
-      'Parameterized Terraform infrastructure modules across development, staging, and production environments reducing configuration drift while enforcing IAM policy consistency.',
-      'Stressed-tested unemployment fraud APIs using PyTest and Locust simulations validating concurrent citizen submissions and strengthening regression validation procedures.',
-    ],
-    stack: ['Python', 'FastAPI', 'Flask', 'gRPC', 'XGBoost', 'ONNX', 'PySpark',
-      'Dataproc', 'MLflow', 'Airflow', 'BigQuery', 'GKE', 'Terraform',
-      'Prometheus', 'Grafana', 'SHAP', 'SMOTE', 'FedRAMP High'],
-  },
-  {
-    title: 'Python Data Scientist',
+    title: 'Data Scientist',
     company: 'Starbucks',
-    period: 'Oct 2017 – Jan 2020',
-    location: 'Seattle, WA',
+    period: 'Jan 2018 – Aug 2020',
+    location: 'India',
     cloud: 'Azure',
     compliance: 'PCI-DSS',
-    color: '#00FFAA',
-    summary: 'Architected Retail Customer Analytics Platform on Azure Synapse powering recommendation systems, sales forecasting, and loyalty personalization across global retail operations.',
+    color: '#00C2FF',
+    summary: 'Delivered Azure retail personalization models improving recommendation relevance across mobile ordering, loyalty engagement, and targeted campaigns.',
     highlights: [
-      'Architected a Retail Customer Analytics Platform using Python, Scikit-Learn, and Azure Synapse improving customer-behavior prediction across retail transaction processing and loyalty analytics.',
-      'Engineered scalable Batch-and-Streaming retail analytics workflows on Azure Data Factory and Azure Synapse supporting recommendation systems, sales forecasting, and personalization intelligence.',
-      'Developed customer-segmentation and recommendation models using TensorFlow, Scikit-Learn, and Pandas improving personalized targeting across digital-commerce retail environments.',
-      'Operationalized MLflow Model Registry and Airflow retraining pipelines maintaining lineage tracking and approval workflows supporting enterprise governance and audit-ready ML deployment.',
+      'Delivered Azure retail personalization models using Python, SQL, and Scikit-learn, improving recommendation relevance across mobile ordering, loyalty engagement, and targeted campaigns.',
+      'Analyzed POS feeds, loyalty records, and mobile orders through Azure Data Factory, supporting customer segmentation and purchase behavior analysis for seasonal demand forecasting.',
+      'Modeled customer behavior using RFM analysis, CLV modeling, and propensity scoring, improving loyalty recommendations, offer targeting, and segmentation for recurring purchase patterns.',
+      'Compared Scikit-learn and XGBoost approaches for recommendation scoring, selecting ensemble models where nonlinear purchase patterns improved prediction stability.',
+      'Tuned machine learning models with cross-validation, class imbalance handling, and hyperparameter optimization for seasonal churn prediction, offer conversion, and basket analysis.',
+      'Validated model outputs using SHAP, A/B testing design, and hypothesis testing, improving explainability for customer segmentation and loyalty campaigns.',
+      'Organized analytical datasets in Azure Data Lake Storage and Azure SQL Database for segmentation analysis and dashboard refreshes across marketing teams.',
+      'Monitored model performance through Azure Monitor and Application Insights, tracking latency, AUC-ROC drift, and feature distribution shifts during high-traffic campaign launches.',
     ],
-    stack: ['Python', 'Scikit-Learn', 'TensorFlow', 'PySpark', 'MLflow', 'Airflow',
-      'Azure Synapse', 'Databricks', 'Snowflake', 'AKS', 'Azure DevOps', 'PCI-DSS'],
+    stack: ['Python', 'SQL', 'Scikit-learn', 'XGBoost', 'Pandas', 'Azure Data Factory',
+      'Azure Databricks', 'RFM Analysis', 'CLV Modeling', 'Propensity Scoring',
+      'SHAP', 'A/B Testing', 'Azure Data Lake Storage', 'Azure SQL Database',
+      'Azure Monitor', 'Application Insights', 'PCI-DSS'],
   },
   {
     title: 'Python Developer',
     company: 'Fortis Healthcare',
-    period: 'Apr 2014 – Jun 2017',
+    period: 'Jun 2015 – Nov 2017',
     location: 'Hyderabad, India',
     cloud: 'On-Prem',
     compliance: 'HIPAA',
-    color: '#00C2FF',
+    color: '#00FFAA',
     summary: 'Built healthcare management applications using Python, Django, Flask, and SQL Server across multi-specialty hospital operations with HIPAA compliance.',
     highlights: [
       'Developed healthcare management applications using Python, Django, SQL Server, and JavaScript improving patient-record processing efficiency across multi-specialty hospital operations.',
+      'Architected patient-registration and appointment-management modules using Python, Django, and MySQL improving outpatient scheduling efficiency throughout multi-specialty clinical coordination.',
       'Engineered backend healthcare applications using Python, Flask, and REST APIs supporting electronic patient-record processing across hospital administration and diagnostic workflows.',
-      'Structured HIPAA-compliant ingestion workflows enforcing PHI masking controls protecting healthcare information throughout hospital-management and patient-care systems.',
+      'Structured ingestion workflows consuming patient-registration records, insurance details, and laboratory reports enforcing HIPAA and PHI masking controls.',
+      'Established reusable backend utility modules using Python and Django ORM managing enterprise API integrations for appointment scheduling, insurance verification, and diagnostic-report coordination.',
+      'Automated build and deployment using Jenkins, Git, and Docker streamlining healthcare application maintenance and release consistency.',
     ],
-    stack: ['Python', 'Django', 'Flask', 'REST APIs', 'SQL Server', 'MySQL', 'Docker', 'Jenkins', 'HIPAA'],
+    stack: ['Python', 'Django', 'Flask', 'REST APIs', 'SQL Server', 'MySQL',
+      'Django ORM', 'Pandas', 'Jenkins', 'Git', 'Docker', 'HIPAA'],
   },
 ]
-
+ 
 const STATS = [
   { label: 'Years Experience', value: '10+' },
   { label: 'Enterprise Clients', value: '5' },
   { label: 'Cloud Platforms', value: '3' },
   { label: 'Compliance Domains', value: '3' },
 ]
-
+ 
 // ─── HOOKS ───────────────────────────────────────────────────────────────────
 function useScrollReveal() {
   useEffect(() => {
@@ -175,7 +177,7 @@ function useScrollReveal() {
     return () => obs.disconnect()
   }, [])
 }
-
+ 
 function useActiveSection() {
   const [active, setActive] = useState('about')
   useEffect(() => {
@@ -188,7 +190,7 @@ function useActiveSection() {
   }, [])
   return active
 }
-
+ 
 // ─── NAVBAR ──────────────────────────────────────────────────────────────────
 function Navbar({ active }) {
   const [scrolled, setScrolled] = useState(false)
@@ -258,7 +260,7 @@ function Navbar({ active }) {
     </nav>
   )
 }
-
+ 
 // ─── HERO ────────────────────────────────────────────────────────────────────
 function Hero() {
   const [typed, setTyped] = useState('')
@@ -273,7 +275,7 @@ function Hero() {
     else { setDel(false); setTi((ti + 1) % titles.length) }
     return () => clearTimeout(t)
   }, [typed, del, ti])
-
+ 
   return (
     <section id="about" style={{
       minHeight: '100vh', display: 'flex', alignItems: 'center', position: 'relative', overflow: 'hidden',
@@ -339,7 +341,7 @@ function Hero() {
               </a>
             </div>
           </div>
-
+ 
           {/* Right — terminal */}
           <div className="terminal-card" style={{ background: 'rgba(13,19,32,0.7)', backdropFilter: 'blur(12px)',
             border: '1px solid rgba(30,45,64,0.8)', animation: 'float 6s ease-in-out infinite' }}>
@@ -358,12 +360,12 @@ function Hero() {
                 ['$ title', 'Sr GenAI & AI/ML Engineer'],
                 ['$ location', 'New Jersey · NYC Metro'],
                 ['$ experience', '10+ years'],
-                ['$ current', 'Quest Diagnostics (Nov 2024–)'],
+                ['$ current', 'Quest Diagnostics (Mar 2025–)'],
                 ['$ clouds', 'Azure · AWS · GCP'],
-                ['$ llms', 'GPT-4o · Bedrock · LangChain'],
-                ['$ domains', 'Healthcare · FinTech · Gov'],
-                ['$ compliance', 'HIPAA · PCI-DSS · FedRAMP'],
-                ['$ education', 'B.Tech ECE — JNTUH 2015'],
+                ['$ llms', 'GPT-4o · LangChain · LangGraph'],
+                ['$ domains', 'Healthcare · FinTech · Retail'],
+                ['$ compliance', 'HIPAA · PCI-DSS · SOX · AML'],
+                ['$ education', 'M.S. CS — Pace University 2024'],
               ].map(([label, val], i) => (
                 <div key={i} style={{ display: 'flex', gap: 12, marginBottom: 8 }}>
                   <span style={{ color: '#4B6480', width: 108, flexShrink: 0 }}>{label}</span>
@@ -381,7 +383,7 @@ function Hero() {
     </section>
   )
 }
-
+ 
 // ─── SECTION HEADER ──────────────────────────────────────────────────────────
 function SectionHeader({ label, title, accent, centered }) {
   return (
@@ -400,7 +402,7 @@ function SectionHeader({ label, title, accent, centered }) {
     </div>
   )
 }
-
+ 
 // ─── SKILLS ──────────────────────────────────────────────────────────────────
 function Skills() {
   return (
@@ -438,7 +440,7 @@ function Skills() {
     </section>
   )
 }
-
+ 
 // ─── EXPERIENCE ──────────────────────────────────────────────────────────────
 function Experience() {
   const [open, setOpen] = useState(0)
@@ -449,14 +451,14 @@ function Experience() {
     }}>
       <div style={{ maxWidth: 1152, margin: '0 auto', padding: '0 24px' }}>
         <SectionHeader label="03 // CAREER" title="Professional Experience" accent="green" />
-
+ 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {EXPERIENCE.map((exp, i) => (
             <div key={i} className="reveal" onClick={() => setOpen(open === i ? -1 : i)}
               style={{ cursor: 'pointer', background: 'rgba(13,19,32,0.75)', backdropFilter: 'blur(12px)',
                 border: `1px solid ${open === i ? exp.color + '45' : 'rgba(30,45,64,0.8)'}`,
                 borderRadius: 4, overflow: 'hidden', transition: 'border-color 0.3s' }}>
-
+ 
               {/* Header */}
               <div style={{ padding: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16 }}>
                 <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
@@ -492,7 +494,7 @@ function Experience() {
                 <span style={{ fontFamily: 'var(--font-mono)', color: '#4B6480', fontSize: 20, flexShrink: 0,
                   transform: open === i ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s' }}>+</span>
               </div>
-
+ 
               {/* Expanded */}
               {open === i && (
                 <div style={{ borderTop: '1px solid rgba(30,45,64,0.8)', padding: '16px 20px 20px' }}>
@@ -518,30 +520,45 @@ function Experience() {
             </div>
           ))}
         </div>
-
+ 
         {/* Education */}
         <div className="reveal" style={{ marginTop: 48 }}>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: '#4B6480',
             letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 16 }}>Education</div>
-          <div style={{ background: 'rgba(13,19,32,0.7)', backdropFilter: 'blur(12px)',
-            border: '1px solid rgba(30,45,64,0.8)', borderRadius: 4, padding: 20,
-            display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-            <div>
-              <div style={{ fontFamily: 'var(--font-display)', fontWeight: 600, color: '#F0F8FF', fontSize: 15 }}>
-                B.Tech — Electronics & Communication Engineering
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div style={{ background: 'rgba(13,19,32,0.7)', backdropFilter: 'blur(12px)',
+              border: '1px solid rgba(30,45,64,0.8)', borderRadius: 4, padding: 20,
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+              <div>
+                <div style={{ fontFamily: 'var(--font-display)', fontWeight: 600, color: '#F0F8FF', fontSize: 15 }}>
+                  M.S. — Computer Science
+                </div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: '#4B6480', marginTop: 4 }}>
+                  Pace University, New York
+                </div>
               </div>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: '#4B6480', marginTop: 4 }}>
-                Jawaharlal Nehru Technological University Hyderabad (JNTUH), India
-              </div>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: '#00C2FF' }}>Jan 2023 – Dec 2024</div>
             </div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: '#00C2FF' }}>2015</div>
+            <div style={{ background: 'rgba(13,19,32,0.7)', backdropFilter: 'blur(12px)',
+              border: '1px solid rgba(30,45,64,0.8)', borderRadius: 4, padding: 20,
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+              <div>
+                <div style={{ fontFamily: 'var(--font-display)', fontWeight: 600, color: '#F0F8FF', fontSize: 15 }}>
+                  B.Tech — Electronics & Communication Engineering
+                </div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: '#4B6480', marginTop: 4 }}>
+                  Jawaharlal Nehru Technological University Hyderabad (JNTUH), India
+                </div>
+              </div>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: '#00C2FF' }}>2015</div>
+            </div>
           </div>
         </div>
       </div>
     </section>
   )
 }
-
+ 
 // ─── CONTACT ─────────────────────────────────────────────────────────────────
 function Contact() {
   return (
@@ -558,7 +575,7 @@ function Contact() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, textAlign: 'left', marginBottom: 24 }}>
             {[
               { label: 'Email', val: 'Vinodkumaraluru1@gmail.com', href: 'mailto:Vinodkumaraluru1@gmail.com' },
-              { label: 'Phone', val: '+1 (201) 595-9525', href: 'tel:+12015959525' },
+              { label: 'Phone', val: '+1 (919) 504-4516', href: 'tel:+19195044516' },
               { label: 'Location', val: 'New Jersey · NYC Metro', href: null },
               { label: 'LinkedIn', val: 'linkedin.com/in/aluvinodkuma', href: 'https://linkedin.com/in/aluvinodkuma' },
             ].map(c => (
@@ -605,7 +622,7 @@ function Contact() {
     </section>
   )
 }
-
+ 
 // ─── FOOTER ──────────────────────────────────────────────────────────────────
 function Footer() {
   return (
@@ -622,12 +639,12 @@ function Footer() {
     </footer>
   )
 }
-
+ 
 // ─── PAGE ────────────────────────────────────────────────────────────────────
 export default function Page() {
   useScrollReveal()
   const active = useActiveSection()
-
+ 
   return (
     <>
       <style>{`
@@ -645,7 +662,7 @@ export default function Page() {
         @media(min-width:768px){.hidden{display:block}.md\\:flex{display:flex}.md\\:hidden{display:none}}
         @media(max-width:767px){.hidden{display:block!important}.md\\:flex{display:none!important}}
       `}</style>
-
+ 
       <Navbar active={active} />
       <main>
         <Hero />
@@ -657,3 +674,4 @@ export default function Page() {
     </>
   )
 }
+ 
