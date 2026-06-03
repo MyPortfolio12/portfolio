@@ -159,7 +159,7 @@ const EXPERIENCE = [
 ]
  
 const STATS = [
-  { label: 'Years Experience', value: '10+' },
+  { label: 'Years Experience', value: '9+' },
   { label: 'Enterprise Clients', value: '5' },
   { label: 'Cloud Platforms', value: '3' },
   { label: 'Compliance Domains', value: '3' },
@@ -306,7 +306,7 @@ function Hero() {
               <span className="blink-cursor" style={{ color: '#00C2FF', marginLeft: 2 }}>|</span>
             </div>
             <p style={{ fontFamily: 'var(--font-body)', color: '#4B6480', lineHeight: 1.7, marginBottom: 32, maxWidth: 460, fontSize: 14 }}>
-              Senior GenAI and AI/ML Engineer with 10+ years of experience building enterprise AI platforms
+              Senior GenAI and AI/ML Engineer with 9+ years of experience building enterprise AI platforms
               across healthcare and financial domains using LLMs, cloud-native services, and scalable
               backend systems. Hands-on expertise in LangChain, RAG pipelines, and production AI deployment
               on Azure, AWS, and GCP.
@@ -359,7 +359,7 @@ function Hero() {
                 ['$ name', 'Vinod Kumar Aluru'],
                 ['$ title', 'Sr GenAI & AI/ML Engineer'],
                 ['$ location', 'New Jersey · NYC Metro'],
-                ['$ experience', '10+ years'],
+                ['$ experience', '9+ years'],
                 ['$ current', 'Quest Diagnostics (Mar 2025–)'],
                 ['$ clouds', 'Azure · AWS · GCP'],
                 ['$ llms', 'GPT-4o · LangChain · LangGraph'],
